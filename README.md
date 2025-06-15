@@ -23,16 +23,18 @@ Sistema distribuído para plataforma de e-commerce, composto por três serviços
 | orders            |          | Order-Service   | Inventory-Service     | Pedidos confirmados              |
 | inventory-events  |1          | Inventory-Service| Notification-Service  | Resultado da reserva de estoque  |
 
+mais informações em [Tópicos Kafka](./kafka-topics.md)
+
 ## Como Executar
 
 1. **Instale o Apache Kafka** (de preferência a versão 2.13) em [Apache Kafka -Downloads](https://kafka.apache.org/downloads) e inicie o serviço do zookeeper e em seguida o kafka.
 2. **Crie os tópicos necessários:** </br>
    No prompt de comando navegue para a pasta do kafka e rode os comandos:
    ```
-   .\bin\windows\kafka-topics.bat --create --topic inventory-events --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+   .\bin\windows\kafka-topics.bat --create --topic inventory-events --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 --config cleanup.policy=delete
    ```
    ```
-   <!-- Colocar o comando para criar o tópico orders -->
+   .\bin\windows\kafka-topics.bat --create --topic orders --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 --config retention.ms=604800000
    ```
 3. **Clone o repositório:** </br>
    git clone https://github.com/TanyRM/Projeto_Pratico-SSCD-Mensageria.git
