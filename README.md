@@ -20,8 +20,8 @@ Sistema distribuído para plataforma de e-commerce, composto por três serviços
 
 | Tópico            | Partições | Produtor        | Consumidor            | Descrição                        |
 |-------------------|-----------|-----------------|-----------------------|----------------------------------|
-| orders            |          | Order-Service   | Inventory-Service     | Pedidos confirmados              |
-| inventory-events  |1          | Inventory-Service| Notification-Service  | Resultado da reserva de estoque  |
+| orders            | 1         | Order-Service   | Inventory-Service     | Pedidos confirmados              |
+| inventory-events  | 1         | Inventory-Service| Notification-Service  | Resultado da reserva de estoque  |
 
 mais informações em [Tópicos Kafka](./kafka-topics.md)
 
