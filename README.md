@@ -27,10 +27,16 @@ Sistema distribuído para plataforma de e-commerce, composto por três serviços
 
 1. **Instale o Apache Kafka** (de preferência a versão 2.13) em [Apache Kafka -Downloads](https://kafka.apache.org/downloads) e inicie o serviço do zookeeper e em seguida o kafka.
 2. **Crie os tópicos necessários:** </br>
-<!-- Colocar o comando para criar os tópicos -->
+   No prompt de comando navegue para a pasta do kafka e rode os comandos:
+   ```
+   .\bin\windows\kafka-topics.bat --create --topic inventory-events --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+   ```
+   ```
+   <!-- Colocar o comando para criar o tópico orders -->
+   ```
 3. **Clone o repositório:** </br>
    git clone https://github.com/TanyRM/Projeto_Pratico-SSCD-Mensageria.git
-4. **Compile e execute cada serviço:**</br>
+4. **Compile e execute cada serviço:** </br>
    - Order-Service (incluindo frontend)
    - Inventory-Service
    - Notification-Service
