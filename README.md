@@ -21,7 +21,7 @@ Sistema distribuído para plataforma de e-commerce, composto por três serviços
 | Tópico            | Partições | Produtor        | Consumidor            | Descrição                        |
 |-------------------|-----------|-----------------|-----------------------|----------------------------------|
 | orders            |          | Order-Service   | Inventory-Service     | Pedidos confirmados              |
-| inventory-events  |          | Inventory-Service| Notification-Service  | Resultado da reserva de estoque  |
+| inventory-events  |1          | Inventory-Service| Notification-Service  | Resultado da reserva de estoque  |
 
 ## Como Executar
 
