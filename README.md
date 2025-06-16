@@ -28,7 +28,10 @@ mais informações em [Tópicos Kafka](./kafka-topics.md)
 ## Como Executar
 
 1. **Instale o Apache Kafka** (de preferência a versão 2.13) em [Apache Kafka -Downloads](https://kafka.apache.org/downloads) e inicie o serviço do zookeeper e em seguida o kafka.
-2. **Crie os tópicos necessários:** </br>
+
+2. Instale um **servidor de banco de dados** MariaDB/MySQL em sua máquina.
+
+3. **Crie os tópicos necessários:** </br>
    No prompt de comando navegue para a pasta do kafka e rode os comandos:
    ```
    .\bin\windows\kafka-topics.bat --create --topic inventory-events --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 --config cleanup.policy=delete
@@ -36,9 +39,17 @@ mais informações em [Tópicos Kafka](./kafka-topics.md)
    ```
    .\bin\windows\kafka-topics.bat --create --topic orders --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 --config retention.ms=604800000
    ```
-3. **Clone o repositório:** </br>
+
+4. **Clone o repositório:** </br>
    git clone https://github.com/TanyRM/Projeto_Pratico-SSCD-Mensageria.git
-4. **Compile e execute cada serviço:** </br>
+
+5. **Crie e popule os bancos de dados**: </br>
+   - Usando uma ferramenta como DBeaver ou MySQL Workbench, execute os seguintes scripts SQL localizados na pasta /scripts do projeto:
+   - Primeiro, execute init-inventory-db.sql e init-order-db.sql
+   - depois, execute populate-inventory.sql para criar o catálogo de produtos.
+   - Em seguida, execute populate-orders.sql para adicionar clientes e pedidos de exemplo.
+
+6. **Compile e execute cada serviço:** </br>
    - Order-Service (incluindo frontend)
    - Inventory-Service
    - Notification-Service
