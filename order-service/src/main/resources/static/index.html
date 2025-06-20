@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Pedido de Produto</title>
+</head>
+<body>
+<h1>Fazer Pedido</h1>
+<form id="orderForm">
+    <label>Produto:
+        <input type="text" id="product" required />
+    </label><br>
+    <label>Quantidade:
+        <input type="number" id="quantity" min="1" required />
+    </label><br>
+    <button type="submit">Enviar Pedido</button>
+</form>
+
+<p id="msg"></p>
+
+<script>
+    const form = document.getElementById('orderForm');
+    const msg = document.getElementById('msg');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const data = {
+            product: document.getElementById('product').value,
+            quantity: parseInt(document.getElementById('quantity').value)
+        };
+
+        try {
+            const response = await fetch('/api/orders', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                msg.textContent = 'Pedido enviado com sucesso!';
+            } else {
+                msg.textContent = 'Erro ao enviar o pedido.';
+            }
+        } catch (err) {
+            msg.textContent = 'Erro de conexão com o servidor.';
+        }
+    });
+</script>
+</body>
+</html>
