@@ -31,24 +31,24 @@ public class InventoryService {
     @Transactional
     public void processOrder(OrderDTO order) {
         // Garantir idempotência
-        if (processedOrderRepository.existsById(order.getOrderId())) {
-            System.out.println("Pedido " + order.getOrderId() + " já processado");
+        if(processedOrderRepository.existsById(order.getOrderId())) {
+            System.out.println("Pedido " + order.getOrderId() + " já processado anteriormente.");
             return;
         }
 
         boolean allItemsAvailable = true;
         // Verifica estoque
-        for (OrderItemDTO item : order.getItems()) {
-            if (!produtoRepository.existsByProdutoIdAndQuantidadeGreaterThanEqual(item.getProdutoId(), item.getQuantidade())) {
+        for(OrderItemDTO item : order.getItems()) {
+            if(!produtoRepository.existsByProdutoIdAndQuantidadeGreaterThanEqual(item.getProdutoId(), item.getQuantidade())) {
                 allItemsAvailable = false;
                 break;
             }
         }
 
         // Processa resultado
-        if (allItemsAvailable) {
+        if(allItemsAvailable) {
             // baixar a quantidade e criar reservas se tiver estoque
-            for (OrderItemDTO item : order.getItems()) {
+            for(OrderItemDTO item : order.getItems()) {
                 Produto p = produtoRepository.findById(item.getProdutoId()).get();
                 p.setQuantidade(p.getQuantidade() - item.getQuantidade());
                 produtoRepository.save(p);

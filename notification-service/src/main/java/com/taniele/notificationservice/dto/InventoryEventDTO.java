@@ -2,7 +2,7 @@ package com.taniele.notificationservice.dto;
 
 /**
  * DTO para receber o evento do tópico 'inventory-events'.
- * É uma cópia da classe do inventory-service, pois os módulos são independentes.
+ * É uma cópia da classe do inventory-service
  */
 public class InventoryEventDTO {
     private String orderId;
