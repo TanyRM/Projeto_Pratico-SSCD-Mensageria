@@ -109,6 +109,46 @@ Para testar o fluxo sem o frontend.
 
 ## Requisitos Não-Funcionais
 
-- **Escalabilidade:** Descrever como usar aumentar partições e consumidores para escalar o sistema usando o kafka.
-- **Tolerância à Falha:** Explicar cenários de falha e como o Kafka pode garantir resiliência.
-- **Idempotência:** Definir o conceito e como o projeto evita processamento duplicado.
+- **Escalabilidade:** 
+
+Com Kafka, conseguimos escalabilidade através de:
+- Partições: Cada tópico pode ter várias partições, e cada uma pode ser processada separadamente. Isso permite paralelismo.
+- Múltiplos consumidores em grupo: Um grupo de consumidores pode processar diferentes partições em paralelo, aumentando a velocidade de consumo.
+- Cluster de brokers: Kafka pode rodar em um cluster de máquinas, distribuindo os tópicos e partições entre os brokers.
+
+**Exemplo:**
+Se houver aumento no número de pedidos, podemos criar mais partições no tópico orders e rodar múltiplas instâncias do serviço consumidor (inventory-service) para processá-los simultaneamente, garantindo desempenho mesmo com alta carga..
+
+- **Tolerância à Falha:** 
+
+A tolerância à falha é a capacidade do sistema continuar funcionando mesmo que ocorra uma falha parcial, como a queda de um serviço ou máquina.
+
+Com Kafka, isso é possível porque:
+Mensagens são persistidas em disco: mesmo que o consumidor caia, a mensagem fica armazenada.
+
+- Replicação de dados entre brokers: tópicos podem ter réplicas em múltiplos brokers (ex: replication.factor=3), então se um broker falhar, outro assume.
+
+- Controle de offset: o consumidor só marca uma mensagem como "lida" depois de processá-la. Assim, em caso de falha, a mensagem pode ser reprocessada.
+
+
+- Exemplo:
+Se o inventory-service cair após começar a processar um pedido, outro consumidor pode retomar a leitura do Kafka e continuar de onde parou, evitando perda de mensagens.
+
+
+- **Idempotência:** 
+
+A idempotência é um conceito onde uma operação pode ser executada várias vezes sem alterar o resultado final.
+
+Em sistemas distribuídos com falhas ou reenvios de mensagens, é comum o mesmo evento ser processado mais de uma vez. Sem idempotência, isso pode causar duplicações ou erros.
+
+Como garantir:
+- Verificar se a operação já foi realizada, usando um identificador único (ex: orderId).
+
+- Registrar os eventos processados em uma tabela ou cache.
+
+- Evitar múltiplas atualizações no banco para o mesmo pedido.
+
+
+- Exemplo:
+  Se o inventory-service receber o mesmo orderId duas vezes por acidente, ele deve checar se já processou esse pedido e ignorar a repetição, mantendo o sistema consistente.
+

@@ -1,0 +1,49 @@
+<form id="orderForm">
+    <input name="nome" placeholder="Nome" required />
+    <input name="email" type="email" placeholder="Email" required />
+    <input name="telefone" placeholder="Telefone" required />
+    <input name="produtoId" placeholder="ID do Produto" required />
+    <input name="quantidade" type="number" placeholder="Quantidade" required />
+    <input name="precoUnidade" type="number" step="0.01" placeholder="Preço Unitário" required />
+    <button type="submit">Enviar Pedido</button>
+</form>
+
+<div id="status"></div>
+
+<script>
+    const form = document.getElementById('orderForm');
+    const statusDiv = document.getElementById('status');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data = new FormData(form);
+
+        const pedido = {
+            customer: {
+                nome: data.get('nome'),
+                email: data.get('email'),
+                telefone: data.get('telefone')
+            },
+            items: [{
+                produtoId: data.get('produtoId'),
+                quantidade: parseInt(data.get('quantidade')),
+                precoUnidade: parseFloat(data.get('precoUnidade'))
+            }]
+        };
+
+        try {
+            const res = await fetch('http://localhost:8080/orders', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(pedido)
+            });
+
+            if (!res.ok) throw new Error('Erro ao enviar pedido');
+
+            const responseData = await res.json();
+            statusDiv.innerHTML = 'Pedido criado com sucesso! ID: ' + responseData.id;
+        } catch (err) {
+            statusDiv.innerHTML = 'Erro: ' + err.message;
+        }
+    });
+</script>

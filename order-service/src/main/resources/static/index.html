@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <title>Loja de Pedidos</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<h1>Produtos</h1>
+<div id="produtos"></div>
+
+<h2>Carrinho</h2>
+<div id="carrinho"></div>
+<p id="total">Total: R$ 0,00</p>
+<button onclick="mostrarFormulario()">Finalizar Pedido</button>
+
+<div id="formulario" style="display:none;">
+    <h3>Dados do Cliente</h3>
+    <input type="text" id="nome" placeholder="Nome" />
+    <input type="email" id="email" placeholder="Email" />
+    <input type="text" id="telefone" placeholder="Telefone" />
+    <button onclick="enviarPedido()">Confirmar Pedido</button>
+</div>
+
+<div id="statusPedido"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
