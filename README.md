@@ -151,3 +151,4 @@ Como garantir:
 
 - Exemplo:
   Se o inventory-service receber o mesmo orderId duas vezes por acidente, ele deve checar se já processou esse pedido e ignorar a repetição, mantendo o sistema consistente.
+
