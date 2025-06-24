@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vitrine de Vendas - Projeto Mensageria</title>
+    <title>Plataforma de E-commerce</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -16,152 +16,145 @@
 </head>
 <body class="bg-gray-50 text-gray-800">
 
-<div class="container mx-auto p-4 md:p-8">
-    <header class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-gray-900">Vitrine de Produtos</h1>
-        <p class="text-lg text-gray-600 mt-2">Projeto Prático - Sistemas Distribuídos e Mensageria</p>
-    </header>
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-900">Produtos</h1>
+            <p class="text-lg text-gray-600 mt-2">E-commerce com Mensageria</p>
+        </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-        <div id="product-list" class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <p id="products-loading" class="text-gray-500 col-span-2">Carregando produtos...</p>
-        </div>
-
-        <div class="lg:col-span-1">
-            <div id="cart-section" class="bg-white p-6 rounded-lg shadow-md sticky top-8">
-                <h2 class="text-2xl font-semibold mb-4 border-b pb-3">🛒 Carrinho de Compras</h2>
-                <div id="cart-items" class="mb-4 max-h-64 overflow-y-auto">
-                    <p id="cart-empty-message" class="text-gray-500">O seu carrinho está vazio.</p>
-                </div>
-                <div id="cart-summary" class="border-t pt-4 hidden">
-                    <div class="flex justify-between font-bold text-lg">
-                        <span>Total:</span>
-                        <span id="cart-total">R$ 0,00</span>
-                    </div>
-                    <button onclick="showOrderForm()" class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition">Finalizar Pedido</button>
-                </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Coluna de Produtos -->
+            <div id="product-list" class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
             </div>
 
-            <div id="order-form-section" class="bg-white p-6 rounded-lg shadow-md mt-8 hidden">
-                <h2 class="text-2xl font-semibold mb-4 border-b pb-3">📝 Detalhes do Cliente</h2>
-                <form id="customer-form" onsubmit="submitOrder(event)">
-                    <div class="mb-4">
-                        <label for="customerId" class="block text-sm font-medium text-gray-700">ID do Cliente</label>
-                        <input type="text" id="customerId" name="customerId" value="cliente-123" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                        <p class="text-xs text-gray-500 mt-1">Simulação de um ID de cliente já logado.</p>
+            <!-- Coluna do Carrinho e Formulário -->
+            <div class="lg:col-span-1">
+                <div id="cart-section" class="bg-white p-6 rounded-lg shadow-md sticky top-8">
+                    <h2 class="text-2xl font-semibold mb-4 border-b pb-3">🛒 Carrinho de Compras</h2>
+                    <div id="cart-items" class="mb-4 max-h-64 overflow-y-auto">
+                        <p id="cart-empty-message" class="text-gray-500">O seu carrinho está vazio.</p>
                     </div>
-                    <div class="flex space-x-2">
-                        <button type="button" onclick="hideOrderForm()" class="w-full bg-gray-200 text-gray-800 py-2 rounded-lg font-semibold hover:bg-gray-300 transition">Voltar</button>
-                        <button type="submit" id="submit-order-btn" class="w-full bg-green-600 text-white py-2 rounded-lg font-semibold hover:bg-green-700 transition">Confirmar Pedido</button>
+                    <div id="cart-summary" class="border-t pt-4 hidden">
+                        <div class="flex justify-between font-bold text-lg">
+                            <span>Total:</span>
+                            <span id="cart-total">R$ 0,00</span>
+                        </div>
+                        <button onclick="showOrderForm()" class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition">Finalizar Pedido</button>
                     </div>
-                </form>
+                </div>
+
+                <div id="order-form-section" class="bg-white p-6 rounded-lg shadow-md mt-8 hidden">
+                    <h2 class="text-2xl font-semibold mb-4 border-b pb-3">📝 Detalhes do Pedido</h2>
+                    <form id="customer-form" onsubmit="submitOrder(event)">
+                        <div class="mb-4">
+                            <label for="nome" class="block text-sm font-medium text-gray-700">Nome Completo</label>
+                            <input type="text" id="nome" name="nome" value="Cliente Teste" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div class="mb-4">
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                            <input type="email" id="email" name="email" value="cliente@teste.com" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div class="mb-4">
+                            <label for="telefone" class="block text-sm font-medium text-gray-700">Telefone</label>
+                            <input type="tel" id="telefone" name="telefone" value="62999999999" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div class="flex space-x-2">
+                           <button type="button" onclick="hideOrderForm()" class="w-full bg-gray-200 text-gray-800 py-2 rounded-lg font-semibold hover:bg-gray-300 transition">Voltar</button>
+                           <button type="submit" id="submit-order-btn" class="w-full bg-green-600 text-white py-2 rounded-lg font-semibold hover:bg-green-700 transition">Confirmar Pedido</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
+        
+        <!-- Modal de Status do Pedido -->
+        <div id="status-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center hidden z-50">
+            <div class="bg-white p-8 rounded-lg shadow-xl text-center max-w-sm w-full">
+                <div id="icon-container" class="mx-auto h-16 w-16">
+                    <div id="spinner" class="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500"></div>
+                </div>
+                <h3 id="status-title" class="text-2xl font-bold mt-6">Processando o seu pedido...</h3>
+                <p id="status-message" class="text-gray-600 mt-2">Aguarde enquanto verificamos o estoque.</p>
+                <p id="status-order-id" class="text-sm text-gray-500 mt-4 break-all"></p>
+                <button onclick="closeModal()" id="close-modal-btn" class="hidden mt-6 bg-blue-600 text-white py-2 px-6 rounded-lg font-semibold hover:bg-blue-700 transition">Fechar</button>
+            </div>
+        </div>
+
     </div>
 
-    <div id="status-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center hidden z-50">
-        <div class="bg-white p-8 rounded-lg shadow-xl text-center max-w-sm w-full">
-            <div id="icon-container" class="mx-auto h-16 w-16">
-                <div id="spinner" class="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500"></div>
-            </div>
-            <h3 id="status-title" class="text-2xl font-bold mt-6">Processando o seu pedido...</h3>
-            <p id="status-message" class="text-gray-600 mt-2">Aguarde enquanto seu pedido é enviado para processamento.</p>
-            <p id="status-order-id" class="text-sm text-gray-500 mt-4 break-all"></p>
-            <button onclick="closeModal()" id="close-modal-btn" class="hidden mt-6 bg-blue-600 text-white py-2 px-6 rounded-lg font-semibold hover:bg-blue-700 transition">Fechar</button>
-        </div>
-    </div>
+    <script>
+        const products = [
+            { id: 'prod-001', name: 'Laptop Pro X1', price: 5500.00, img: 'https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTeS_mwjov9WONS2hpYB4dr3286mdU51mnVGwug6dWOKMzXVGTTF-nErrBNz0W6UM7BAdX9nqllF363S5UNuacfyBZBrvEtJpyc8vh7pHkMVFBDuUwwARtC', description: 'Notebook de alta performance com 16GB RAM e SSD 512GB.' },
+            { id: 'prod-002', name: 'Mouse Gamer RGB', price: 250.75, img: 'https://img.terabyteshop.com.br/produto/g/mouse-gamer-redragon-reaping-plus-rgb-6-botoes-52000-dpi-black-m987p-k-v2_201145.jpg', description: 'Mouse com sensor óptico de 16.000 DPI e iluminação RGB.' },
+            { id: 'prod-003', name: 'Teclado Mecânico Pro', price: 450.00, img: 'https://a-static.mlcdn.com.br/1500x1500/teclado-mecanico-rk-royal-kludge-r87-pro-75-rgb-retroiluminado/nocnoceua/aub0d5b2lrb5/21870b28445c08d23473991137f2f4cb.jpeg', description: 'Teclado mecânico com switches azuis e layout ABNT2.' },
+            { id: 'prod-004', name: 'Monitor UltraWide 29"', price: 1200.50, img: 'https://images.tcdn.com.br/img/img_prod/15959/monitor_29_lg_led_ultrawide_ips_hdmi_hdr_vesa_amd_radeon_freesync_29wl500_18107_3_ff43577d8b59aa06fb6436f15a925265.png', description: 'Monitor com proporção 21:9 para maior produtividade.' },
+            { id: 'prod-005', name: 'Webcam Full HD', price: 180.00, img: 'https://cdn.awsli.com.br/600x700/2702/2702996/produto/252828283/webcam_full_hd_1080p_com_microfone_2_0_traceboard_tb_13_4597_1_884f3105ccfe9404e-gerahy91ji.jpg', description: 'Webcam 1080p para videoconferências.' },
+            { id: 'prod-006', name: 'Headset Gamer 7.1', price: 350.00, img: 'https://www.bright.com.br/media/djcatalog2/images/item/2/headset-gamer-7-1-usb-591-1_f.jpg', description: 'Headset com som surround 7.1 e microfone com cancelamento de ruído.' },
+            { id: 'prod-007', name: 'SSD NVMe 1TB', price: 650.00, img: 'https://img.terabyteshop.com.br/produto/g/ssd-kingston-nv2-1tb-m2-nvme-2280-leitura-3500mbs-e-gravacao-2100mbs-snv2s1000g_154118.jpg', description: 'Unidade de estado sólido com velocidades de leitura/gravação de até 3.500 MB/s.' },
+            { id: 'prod-008', name: 'Cadeira Gamer Ergonômica', price: 950.00, img: 'https://images.tcdn.com.br/img/img_prod/631328/cadeira_gamer_stillus_ergonomica_com_apoio_para_os_pes_oficial_webshop_5815_2_64e7cdf787e46f7ab24bc5366a815dbc.jpeg', description: 'Cadeira ergonômica com suporte lombar e de pescoço ajustáveis.' }
+        ];
 
-</div>
+        // Estado do carrinho
+        let cart = [];
+        let pollingInterval;
 
-<script>
-    // ATENÇÃO: Altere esta URL se o seu API Gateway estiver em outra porta ou endereço.
-    const GATEWAY_URL = 'http://localhost:8083';
-
-    // Estado da aplicação
-    let products = [];
-    let cart = [];
-    let pollingInterval;
-
-    // --- Funções do Catálogo e Carrinho ---
-
-    // MUDANÇA: Busca os produtos da API em vez de usar dados fixos.
-    async function fetchProducts() {
-        const productList = document.getElementById('product-list');
-        const loadingMessage = document.getElementById('products-loading');
-        try {
-            const response = await fetch(`${GATEWAY_URL}/products`);
-            if (!response.ok) throw new Error('Não foi possível carregar os produtos.');
-
-            products = await response.json();
-
-            if (products.length === 0) {
-                loadingMessage.textContent = 'Nenhum produto encontrado no catálogo.';
-                return;
-            }
-            loadingMessage.style.display = 'none';
-
+        function renderProducts() {
+            const productList = document.getElementById('product-list');
             productList.innerHTML = products.map(p => `
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105">
-                         <img src="https://placehold.co/600x400/e2e8f0/333?text=${p.name.replace(/\s/g, '+')}" alt="${p.name}" class="w-full h-48 object-cover">
-                        <div class="p-4">
-                            <h3 class="text-lg font-semibold">${p.name}</h3>
-                            <p class="text-gray-600 text-sm mt-1">Estoque: ${p.stock}</p>
-                            <div class="flex justify-between items-center mt-4">
-                                <span class="text-xl font-bold text-gray-900">R$ ${p.price.toFixed(2)}</span>
-                                <button onclick="addToCart('${p.id}')" class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg font-semibold hover:bg-blue-200 transition text-sm">Adicionar</button>
-                            </div>
+                <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105">
+                    <img src="${p.img}" alt="${p.name}" class="w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/333?text=Imagem+Indisponível';">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold">${p.name}</h3>
+                        <p class="text-gray-600 text-sm mt-1">${p.description}</p>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-xl font-bold text-gray-900">R$ ${p.price.toFixed(2)}</span>
+                            <button onclick="addToCart('${p.id}')" class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg font-semibold hover:bg-blue-200 transition text-sm">Adicionar</button>
                         </div>
                     </div>
-                `).join('');
-        } catch (error) {
-            console.error("Erro ao buscar produtos:", error);
-            loadingMessage.innerHTML = `<span class="text-red-500 font-semibold">Erro ao carregar produtos.</span><br>Verifique se os serviços (Gateway, ServicoProdutos) estão em execução.`;
+                </div>
+            `).join('');
         }
-    }
 
-    function addToCart(productId) {
-        // No seu projeto, o ID do produto é um número (long), então convertemos.
-        const idAsNumber = parseInt(productId, 10);
-        const product = products.find(p => p.id === idAsNumber);
-        const cartItem = cart.find(item => item.id === idAsNumber);
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const cartItem = cart.find(item => item.id === productId);
 
-        if (cartItem) {
-            cartItem.quantity++;
-        } else {
-            cart.push({ ...product, quantity: 1 });
-        }
-        renderCart();
-    }
-
-    function updateQuantity(productId, change) {
-        const idAsNumber = parseInt(productId, 10);
-        const cartItem = cart.find(item => item.id === idAsNumber);
-        if (cartItem) {
-            cartItem.quantity += change;
-            if (cartItem.quantity <= 0) {
-                cart = cart.filter(item => item.id !== idAsNumber);
+            if (cartItem) {
+                cartItem.quantity++;
+            } else {
+                cart.push({ ...product, quantity: 1 });
             }
+            renderCart();
         }
-        renderCart();
-    }
-
-    function renderCart() {
-        const cartItemsDiv = document.getElementById('cart-items');
-        const cartSummaryDiv = document.getElementById('cart-summary');
-
-        if (cart.length === 0) {
-            cartItemsDiv.innerHTML = '<p id="cart-empty-message" class="text-gray-500">O seu carrinho está vazio.</p>';
-            cartSummaryDiv.classList.add('hidden');
-            return;
+        
+        function updateQuantity(productId, change) {
+            const cartItem = cart.find(item => item.id === productId);
+            if (cartItem) {
+                cartItem.quantity += change;
+                if (cartItem.quantity <= 0) {
+                    cart = cart.filter(item => item.id !== productId);
+                }
+            }
+            renderCart();
         }
 
-        cartSummaryDiv.classList.remove('hidden');
-
-        cartItemsDiv.innerHTML = cart.map(item => `
+        function renderCart() {
+            const cartItemsDiv = document.getElementById('cart-items');
+            const cartSummaryDiv = document.getElementById('cart-summary');
+            
+            if (cart.length === 0) {
+                cartItemsDiv.innerHTML = '<p class="text-gray-500">O seu carrinho está vazio.</p>';
+                cartSummaryDiv.classList.add('hidden');
+                return;
+            }
+            
+            cartSummaryDiv.classList.remove('hidden');
+            
+            cartItemsDiv.innerHTML = cart.map(item => `
                 <div class="flex items-center justify-between py-2 border-b last:border-b-0">
                     <div class="flex items-center">
-                         <img src="https://placehold.co/100x100/e2e8f0/333?text=${item.name.charAt(0)}" alt="${item.name}" class="w-12 h-12 rounded object-cover mr-3">
+                        <img src="${item.img}" alt="${item.name}" class="w-12 h-12 rounded object-cover mr-3" onerror="this.onerror=null;this.src='https://placehold.co/100x100/e2e8f0/333?text=Img';">
                         <div>
                             <p class="font-semibold text-sm">${item.name}</p>
                             <p class="text-gray-500 text-xs">R$ ${item.price.toFixed(2)}</p>
@@ -175,150 +168,142 @@
                 </div>
             `).join('');
 
-        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        document.getElementById('cart-total').textContent = `R$ ${total.toFixed(2)}`;
-    }
-
-    function showOrderForm() {
-        document.getElementById('cart-section').classList.add('hidden');
-        document.getElementById('order-form-section').classList.remove('hidden');
-    }
-
-    function hideOrderForm() {
-        document.getElementById('order-form-section').classList.add('hidden');
-        document.getElementById('cart-section').classList.remove('hidden');
-    }
-
-    // --- Funções de Submissão e Status do Pedido ---
-
-    // MUDANÇA: Adapta o payload e o endpoint para o ServicoVendas.
-    async function submitOrder(event) {
-        event.preventDefault();
-        const form = event.target;
-
-        // MUDANÇA: O payload agora corresponde ao OrderDTO do seu projeto.
-        const payload = {
-            customerId: form.customerId.value,
-            items: cart.map(item => ({
-                productId: item.id,
-                quantity: item.quantity
-            }))
-        };
-
-        openModal();
-        document.getElementById('submit-order-btn').disabled = true;
-
-        try {
-            // MUDANÇA: Envia o pedido para o endpoint /sales do Gateway.
-            const response = await fetch(`${GATEWAY_URL}/sales`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            const result = await response.json();
-
-            if (!response.ok) {
-                // Tenta extrair uma mensagem de erro mais clara do corpo da resposta
-                const errorBody = result;
-                const errorMessage = errorBody.error || errorBody.message || 'Falha ao criar o pedido.';
-                throw new Error(errorMessage);
-            }
-
-            document.getElementById('status-order-id').textContent = `ID do Pedido: ${result.id}`;
-            startPolling(result.id);
-
-        } catch (error) {
-            updateModalIcon('error');
-            document.getElementById('status-title').textContent = 'Ops! Algo deu errado.';
-            document.getElementById('status-message').textContent = `${error.message}`;
-            document.getElementById('close-modal-btn').classList.remove('hidden');
-        } finally {
-            document.getElementById('submit-order-btn').disabled = false;
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.getElementById('cart-total').textContent = `R$ ${total.toFixed(2)}`;
         }
-    }
+        
+        function showOrderForm() {
+            document.getElementById('cart-section').classList.add('hidden');
+            document.getElementById('order-form-section').classList.remove('hidden');
+        }
 
-    // MUDANÇA: Adapta o endpoint de polling e a lógica de verificação de status.
-    function startPolling(orderId) {
-        pollingInterval = setInterval(async () => {
+        function hideOrderForm() {
+            document.getElementById('order-form-section').classList.add('hidden');
+            document.getElementById('cart-section').classList.remove('hidden');
+        }
+
+        async function submitOrder(event) {
+            event.preventDefault();
+            const form = event.target;
+            
+            const payload = {
+                customer: {
+                    nome: form.nome.value,
+                    email: form.email.value,
+                    telefone: form.telefone.value,
+                },
+                items: cart.map(item => ({
+                    produtoId: item.id,
+                    quantidade: item.quantity,
+                    precoUnidade: item.price
+                }))
+            };
+
+            openModal();
+            document.getElementById('submit-order-btn').disabled = true;
+            document.getElementById('submit-order-btn').textContent = "A enviar...";
+
             try {
-                // MUDANÇA: Busca o status no endpoint /sales/{id}
-                const response = await fetch(`${GATEWAY_URL}/sales/${orderId}`);
+                const response = await fetch('http://localhost:8080/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
                 if (!response.ok) {
+                    throw new Error(result.message || 'Falha na requisição.');
+                }
+                
+                document.getElementById('status-order-id').textContent = `ID do Pedido: ${result.orderId}`;
+                startPolling(result.orderId);
+
+            } catch (error) {
+                updateModalIcon('error');
+                document.getElementById('status-title').textContent = 'Ops! Algo deu errado.';
+                document.getElementById('status-message').textContent = `Erro: ${error.message}`;
+                document.getElementById('close-modal-btn').classList.remove('hidden');
+            } finally {
+                 document.getElementById('submit-order-btn').disabled = false;
+                 document.getElementById('submit-order-btn').textContent = "Confirmar Pedido";
+            }
+        }
+        
+        function startPolling(orderId) {
+            pollingInterval = setInterval(async () => {
+                try {
+                    const response = await fetch(`http://localhost:8080/orders/${orderId}`);
+                    if (!response.ok) {
+                        clearInterval(pollingInterval);
+                        updateModalIcon('error');
+                        document.getElementById('status-title').textContent = 'Não foi possível buscar o status.';
+                        document.getElementById('status-message').textContent = 'O servidor não respondeu.';
+                        document.getElementById('close-modal-btn').classList.remove('hidden');
+                        return;
+                    }
+                    
+                    const order = await response.json();
+                    
+                    if (order.status !== 'PENDENTE') {
+                        clearInterval(pollingInterval);
+                        if(order.status === 'APROVADO') {
+                            updateModalIcon('success');
+                            document.getElementById('status-title').textContent = 'Pedido Aprovado!';
+                            document.getElementById('status-message').textContent = 'O seu pedido foi confirmado e o estoque reservado.';
+                        } else {
+                            updateModalIcon('error');
+                            document.getElementById('status-title').textContent = 'Pedido Rejeitado.';
+                            document.getElementById('status-message').textContent = 'Não foi possível reservar o estoque para o seu pedido.';
+                        }
+                        document.getElementById('close-modal-btn').classList.remove('hidden');
+                    } else {
+                         document.getElementById('status-message').textContent = `Status atual: PENDENTE...`;
+                    }
+                } catch(e) {
                     clearInterval(pollingInterval);
                     updateModalIcon('error');
-                    document.getElementById('status-title').textContent = 'Não foi possível buscar o status.';
-                    document.getElementById('status-message').textContent = 'O servidor não respondeu ou o pedido não foi encontrado.';
+                    document.getElementById('status-title').textContent = 'Erro de comunicação.';
+                    document.getElementById('status-message').textContent = 'Não foi possível ligar ao servidor para buscar o status.';
                     document.getElementById('close-modal-btn').classList.remove('hidden');
-                    return;
                 }
-
-                const order = await response.json();
-                const status = order.status.toUpperCase(); // Padroniza para maiúsculas
-
-                // MUDANÇA: Verifica os status 'APPROVED' e 'REJECTED' do seu enum.
-                if (status !== 'PENDING') {
-                    clearInterval(pollingInterval);
-                    if(status === 'APPROVED') {
-                        updateModalIcon('success');
-                        document.getElementById('status-title').textContent = 'Pedido Aprovado!';
-                        document.getElementById('status-message').textContent = 'Seu pedido foi confirmado com sucesso.';
-                    } else { // REJECTED
-                        updateModalIcon('error');
-                        document.getElementById('status-title').textContent = 'Pedido Rejeitado.';
-                        document.getElementById('status-message').textContent = 'Não foi possível processar seu pedido (ex: falta de estoque).';
-                    }
-                    document.getElementById('close-modal-btn').classList.remove('hidden');
-                } else {
-                    document.getElementById('status-message').textContent = `Status atual: PENDENTE... Aguardando processamento.`;
-                }
-            } catch(e) {
-                clearInterval(pollingInterval);
-                updateModalIcon('error');
-                document.getElementById('status-title').textContent = 'Erro de comunicação.';
-                document.getElementById('status-message').textContent = 'Não foi possível conectar ao servidor para buscar o status.';
-                document.getElementById('close-modal-btn').classList.remove('hidden');
-            }
-        }, 3000); // Pergunta a cada 3 segundos
-    }
-
-    function openModal() {
-        document.getElementById('status-modal').classList.remove('hidden');
-    }
-
-    function updateModalIcon(type) {
-        const iconContainer = document.getElementById('icon-container');
-        if (type === 'success') {
-            iconContainer.innerHTML = `<svg class="w-16 h-16 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path class="success-checkmark" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
-        } else if (type === 'error') {
-            iconContainer.innerHTML = `<svg class="w-16 h-16 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
-        } else {
-            iconContainer.innerHTML = `<div id="spinner" class="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500"></div>`;
+            }, 3000); 
         }
-    }
+        
+        function openModal() {
+            document.getElementById('status-modal').classList.remove('hidden');
+        }
 
-    function closeModal() {
-        document.getElementById('status-modal').classList.add('hidden');
-        // Reset modal state
-        updateModalIcon('loading');
-        document.getElementById('status-title').textContent = 'Processando o seu pedido...';
-        document.getElementById('status-message').textContent = 'Aguarde enquanto verificamos o estoque.';
-        document.getElementById('status-order-id').textContent = '';
-        document.getElementById('close-modal-btn').classList.add('hidden');
+        function updateModalIcon(type) {
+             const iconContainer = document.getElementById('icon-container');
+             if (type === 'success') {
+                iconContainer.innerHTML = `<svg class="w-16 h-16 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path class="success-checkmark" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+             } else if (type === 'error') {
+                iconContainer.innerHTML = `<svg class="w-16 h-16 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+             } else {
+                iconContainer.innerHTML = `<div id="spinner" class="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500"></div>`;
+             }
+        }
 
-        // Resetar formulário e carrinho
-        cart = [];
-        renderCart();
-        document.getElementById('customer-form').reset();
-        hideOrderForm();
-    }
+        function closeModal() {
+            document.getElementById('status-modal').classList.add('hidden');
+            updateModalIcon('loading');
+            document.getElementById('status-title').textContent = 'Processando o seu pedido...';
+            document.getElementById('status-message').textContent = 'Aguarde enquanto verificamos o estoque.';
+            document.getElementById('status-order-id').textContent = '';
+            document.getElementById('close-modal-btn').classList.add('hidden');
+            
+            cart = [];
+            renderCart();
+            document.getElementById('customer-form').reset();
+            hideOrderForm();
+        }
 
-    // --- Inicialização ---
-    document.addEventListener('DOMContentLoaded', () => {
-        fetchProducts(); // MUDANÇA: Inicia buscando os produtos da API.
-        renderCart();
-    });
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+            renderCart();
+        });
 
-</script>
+    </script>
 </body>
 </html>
