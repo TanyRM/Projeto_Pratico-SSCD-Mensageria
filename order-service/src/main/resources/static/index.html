@@ -1,29 +1,324 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8" />
-    <title>Loja de Pedidos</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrine de Vendas - Projeto Mensageria</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .success-checkmark { stroke-dasharray: 100; stroke-dashoffset: 100; animation: draw-checkmark 0.5s ease-in-out forwards; }
+        @keyframes draw-checkmark { to { stroke-dashoffset: 0; } }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
-<h1>Produtos</h1>
-<div id="produtos"></div>
+<body class="bg-gray-50 text-gray-800">
 
-<h2>Carrinho</h2>
-<div id="carrinho"></div>
-<p id="total">Total: R$ 0,00</p>
-<button onclick="mostrarFormulario()">Finalizar Pedido</button>
+<div class="container mx-auto p-4 md:p-8">
+    <header class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900">Vitrine de Produtos</h1>
+        <p class="text-lg text-gray-600 mt-2">Projeto Prático - Sistemas Distribuídos e Mensageria</p>
+    </header>
 
-<div id="formulario" style="display:none;">
-    <h3>Dados do Cliente</h3>
-    <input type="text" id="nome" placeholder="Nome" />
-    <input type="email" id="email" placeholder="Email" />
-    <input type="text" id="telefone" placeholder="Telefone" />
-    <button onclick="enviarPedido()">Confirmar Pedido</button>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <div id="product-list" class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <p id="products-loading" class="text-gray-500 col-span-2">Carregando produtos...</p>
+        </div>
+
+        <div class="lg:col-span-1">
+            <div id="cart-section" class="bg-white p-6 rounded-lg shadow-md sticky top-8">
+                <h2 class="text-2xl font-semibold mb-4 border-b pb-3">🛒 Carrinho de Compras</h2>
+                <div id="cart-items" class="mb-4 max-h-64 overflow-y-auto">
+                    <p id="cart-empty-message" class="text-gray-500">O seu carrinho está vazio.</p>
+                </div>
+                <div id="cart-summary" class="border-t pt-4 hidden">
+                    <div class="flex justify-between font-bold text-lg">
+                        <span>Total:</span>
+                        <span id="cart-total">R$ 0,00</span>
+                    </div>
+                    <button onclick="showOrderForm()" class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition">Finalizar Pedido</button>
+                </div>
+            </div>
+
+            <div id="order-form-section" class="bg-white p-6 rounded-lg shadow-md mt-8 hidden">
+                <h2 class="text-2xl font-semibold mb-4 border-b pb-3">📝 Detalhes do Cliente</h2>
+                <form id="customer-form" onsubmit="submitOrder(event)">
+                    <div class="mb-4">
+                        <label for="customerId" class="block text-sm font-medium text-gray-700">ID do Cliente</label>
+                        <input type="text" id="customerId" name="customerId" value="cliente-123" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                        <p class="text-xs text-gray-500 mt-1">Simulação de um ID de cliente já logado.</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button type="button" onclick="hideOrderForm()" class="w-full bg-gray-200 text-gray-800 py-2 rounded-lg font-semibold hover:bg-gray-300 transition">Voltar</button>
+                        <button type="submit" id="submit-order-btn" class="w-full bg-green-600 text-white py-2 rounded-lg font-semibold hover:bg-green-700 transition">Confirmar Pedido</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="status-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center hidden z-50">
+        <div class="bg-white p-8 rounded-lg shadow-xl text-center max-w-sm w-full">
+            <div id="icon-container" class="mx-auto h-16 w-16">
+                <div id="spinner" class="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500"></div>
+            </div>
+            <h3 id="status-title" class="text-2xl font-bold mt-6">Processando o seu pedido...</h3>
+            <p id="status-message" class="text-gray-600 mt-2">Aguarde enquanto seu pedido é enviado para processamento.</p>
+            <p id="status-order-id" class="text-sm text-gray-500 mt-4 break-all"></p>
+            <button onclick="closeModal()" id="close-modal-btn" class="hidden mt-6 bg-blue-600 text-white py-2 px-6 rounded-lg font-semibold hover:bg-blue-700 transition">Fechar</button>
+        </div>
+    </div>
+
 </div>
 
-<div id="statusPedido"></div>
+<script>
+    // ATENÇÃO: Altere esta URL se o seu API Gateway estiver em outra porta ou endereço.
+    const GATEWAY_URL = 'http://localhost:8083';
 
-<script src="script.js"></script>
+    // Estado da aplicação
+    let products = [];
+    let cart = [];
+    let pollingInterval;
+
+    // --- Funções do Catálogo e Carrinho ---
+
+    // MUDANÇA: Busca os produtos da API em vez de usar dados fixos.
+    async function fetchProducts() {
+        const productList = document.getElementById('product-list');
+        const loadingMessage = document.getElementById('products-loading');
+        try {
+            const response = await fetch(`${GATEWAY_URL}/products`);
+            if (!response.ok) throw new Error('Não foi possível carregar os produtos.');
+
+            products = await response.json();
+
+            if (products.length === 0) {
+                loadingMessage.textContent = 'Nenhum produto encontrado no catálogo.';
+                return;
+            }
+            loadingMessage.style.display = 'none';
+
+            productList.innerHTML = products.map(p => `
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105">
+                         <img src="https://placehold.co/600x400/e2e8f0/333?text=${p.name.replace(/\s/g, '+')}" alt="${p.name}" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold">${p.name}</h3>
+                            <p class="text-gray-600 text-sm mt-1">Estoque: ${p.stock}</p>
+                            <div class="flex justify-between items-center mt-4">
+                                <span class="text-xl font-bold text-gray-900">R$ ${p.price.toFixed(2)}</span>
+                                <button onclick="addToCart('${p.id}')" class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg font-semibold hover:bg-blue-200 transition text-sm">Adicionar</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+        } catch (error) {
+            console.error("Erro ao buscar produtos:", error);
+            loadingMessage.innerHTML = `<span class="text-red-500 font-semibold">Erro ao carregar produtos.</span><br>Verifique se os serviços (Gateway, ServicoProdutos) estão em execução.`;
+        }
+    }
+
+    function addToCart(productId) {
+        // No seu projeto, o ID do produto é um número (long), então convertemos.
+        const idAsNumber = parseInt(productId, 10);
+        const product = products.find(p => p.id === idAsNumber);
+        const cartItem = cart.find(item => item.id === idAsNumber);
+
+        if (cartItem) {
+            cartItem.quantity++;
+        } else {
+            cart.push({ ...product, quantity: 1 });
+        }
+        renderCart();
+    }
+
+    function updateQuantity(productId, change) {
+        const idAsNumber = parseInt(productId, 10);
+        const cartItem = cart.find(item => item.id === idAsNumber);
+        if (cartItem) {
+            cartItem.quantity += change;
+            if (cartItem.quantity <= 0) {
+                cart = cart.filter(item => item.id !== idAsNumber);
+            }
+        }
+        renderCart();
+    }
+
+    function renderCart() {
+        const cartItemsDiv = document.getElementById('cart-items');
+        const cartSummaryDiv = document.getElementById('cart-summary');
+
+        if (cart.length === 0) {
+            cartItemsDiv.innerHTML = '<p id="cart-empty-message" class="text-gray-500">O seu carrinho está vazio.</p>';
+            cartSummaryDiv.classList.add('hidden');
+            return;
+        }
+
+        cartSummaryDiv.classList.remove('hidden');
+
+        cartItemsDiv.innerHTML = cart.map(item => `
+                <div class="flex items-center justify-between py-2 border-b last:border-b-0">
+                    <div class="flex items-center">
+                         <img src="https://placehold.co/100x100/e2e8f0/333?text=${item.name.charAt(0)}" alt="${item.name}" class="w-12 h-12 rounded object-cover mr-3">
+                        <div>
+                            <p class="font-semibold text-sm">${item.name}</p>
+                            <p class="text-gray-500 text-xs">R$ ${item.price.toFixed(2)}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <button onclick="updateQuantity('${item.id}', -1)" class="px-2 font-bold">-</button>
+                        <span class="px-2">${item.quantity}</span>
+                        <button onclick="updateQuantity('${item.id}', 1)" class="px-2 font-bold">+</button>
+                    </div>
+                </div>
+            `).join('');
+
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        document.getElementById('cart-total').textContent = `R$ ${total.toFixed(2)}`;
+    }
+
+    function showOrderForm() {
+        document.getElementById('cart-section').classList.add('hidden');
+        document.getElementById('order-form-section').classList.remove('hidden');
+    }
+
+    function hideOrderForm() {
+        document.getElementById('order-form-section').classList.add('hidden');
+        document.getElementById('cart-section').classList.remove('hidden');
+    }
+
+    // --- Funções de Submissão e Status do Pedido ---
+
+    // MUDANÇA: Adapta o payload e o endpoint para o ServicoVendas.
+    async function submitOrder(event) {
+        event.preventDefault();
+        const form = event.target;
+
+        // MUDANÇA: O payload agora corresponde ao OrderDTO do seu projeto.
+        const payload = {
+            customerId: form.customerId.value,
+            items: cart.map(item => ({
+                productId: item.id,
+                quantity: item.quantity
+            }))
+        };
+
+        openModal();
+        document.getElementById('submit-order-btn').disabled = true;
+
+        try {
+            // MUDANÇA: Envia o pedido para o endpoint /sales do Gateway.
+            const response = await fetch(`${GATEWAY_URL}/sales`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                // Tenta extrair uma mensagem de erro mais clara do corpo da resposta
+                const errorBody = result;
+                const errorMessage = errorBody.error || errorBody.message || 'Falha ao criar o pedido.';
+                throw new Error(errorMessage);
+            }
+
+            document.getElementById('status-order-id').textContent = `ID do Pedido: ${result.id}`;
+            startPolling(result.id);
+
+        } catch (error) {
+            updateModalIcon('error');
+            document.getElementById('status-title').textContent = 'Ops! Algo deu errado.';
+            document.getElementById('status-message').textContent = `${error.message}`;
+            document.getElementById('close-modal-btn').classList.remove('hidden');
+        } finally {
+            document.getElementById('submit-order-btn').disabled = false;
+        }
+    }
+
+    // MUDANÇA: Adapta o endpoint de polling e a lógica de verificação de status.
+    function startPolling(orderId) {
+        pollingInterval = setInterval(async () => {
+            try {
+                // MUDANÇA: Busca o status no endpoint /sales/{id}
+                const response = await fetch(`${GATEWAY_URL}/sales/${orderId}`);
+                if (!response.ok) {
+                    clearInterval(pollingInterval);
+                    updateModalIcon('error');
+                    document.getElementById('status-title').textContent = 'Não foi possível buscar o status.';
+                    document.getElementById('status-message').textContent = 'O servidor não respondeu ou o pedido não foi encontrado.';
+                    document.getElementById('close-modal-btn').classList.remove('hidden');
+                    return;
+                }
+
+                const order = await response.json();
+                const status = order.status.toUpperCase(); // Padroniza para maiúsculas
+
+                // MUDANÇA: Verifica os status 'APPROVED' e 'REJECTED' do seu enum.
+                if (status !== 'PENDING') {
+                    clearInterval(pollingInterval);
+                    if(status === 'APPROVED') {
+                        updateModalIcon('success');
+                        document.getElementById('status-title').textContent = 'Pedido Aprovado!';
+                        document.getElementById('status-message').textContent = 'Seu pedido foi confirmado com sucesso.';
+                    } else { // REJECTED
+                        updateModalIcon('error');
+                        document.getElementById('status-title').textContent = 'Pedido Rejeitado.';
+                        document.getElementById('status-message').textContent = 'Não foi possível processar seu pedido (ex: falta de estoque).';
+                    }
+                    document.getElementById('close-modal-btn').classList.remove('hidden');
+                } else {
+                    document.getElementById('status-message').textContent = `Status atual: PENDENTE... Aguardando processamento.`;
+                }
+            } catch(e) {
+                clearInterval(pollingInterval);
+                updateModalIcon('error');
+                document.getElementById('status-title').textContent = 'Erro de comunicação.';
+                document.getElementById('status-message').textContent = 'Não foi possível conectar ao servidor para buscar o status.';
+                document.getElementById('close-modal-btn').classList.remove('hidden');
+            }
+        }, 3000); // Pergunta a cada 3 segundos
+    }
+
+    function openModal() {
+        document.getElementById('status-modal').classList.remove('hidden');
+    }
+
+    function updateModalIcon(type) {
+        const iconContainer = document.getElementById('icon-container');
+        if (type === 'success') {
+            iconContainer.innerHTML = `<svg class="w-16 h-16 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path class="success-checkmark" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+        } else if (type === 'error') {
+            iconContainer.innerHTML = `<svg class="w-16 h-16 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+        } else {
+            iconContainer.innerHTML = `<div id="spinner" class="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500"></div>`;
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('status-modal').classList.add('hidden');
+        // Reset modal state
+        updateModalIcon('loading');
+        document.getElementById('status-title').textContent = 'Processando o seu pedido...';
+        document.getElementById('status-message').textContent = 'Aguarde enquanto verificamos o estoque.';
+        document.getElementById('status-order-id').textContent = '';
+        document.getElementById('close-modal-btn').classList.add('hidden');
+
+        // Resetar formulário e carrinho
+        cart = [];
+        renderCart();
+        document.getElementById('customer-form').reset();
+        hideOrderForm();
+    }
+
+    // --- Inicialização ---
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchProducts(); // MUDANÇA: Inicia buscando os produtos da API.
+        renderCart();
+    });
+
+</script>
 </body>
 </html>
